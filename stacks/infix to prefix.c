@@ -1,27 +1,33 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #define MAX_SIZE 30
 
-char stack[MAX_SIZE];
+char stack[MAX_SIZE], prefix[MAX_SIZE];
 int top = -1;
 
-void push(char a)
+void push(char x)
 {
     if (top == MAX_SIZE - 1)
+    {
         printf("Overflow");
-
+    }
     else
-        stack[++top] = a;
+    {
+        stack[++top] = x;
+    }
 }
 
-char pop()
+int pop()
 {
     if (top == -1)
     {
-        return '\0';
+        printf("Underflow");
     }
     else
+    {
         return stack[top--];
+    }
 }
 
 int precedence(char op)
@@ -33,59 +39,60 @@ int precedence(char op)
     return 0;
 }
 
+void reverse(char infix[], char rev[])
+{
+    int c = 0;
+    for (int i = strlen(infix) - 1; i >= 0; i--)
+    {
+        if (infix[i] == ')')
+            rev[c++] = '(';
+
+        else if (infix[i] == '(')
+            rev[c++] = ')';
+
+        else
+            rev[c++] = infix[i];
+    }
+    // rev[c] = '\0';
+}
+
 int main()
 {
-    char exper[30], ecopy[30];
-    scanf("%[^\n]s", exper);
+    char infix[MAX_SIZE], rev[MAX_SIZE];
     int c = 0;
-    int len = strlen(exper);
-    for (int i = len - 1; i >= 0; i--)
+    scanf("%[^\n]s", infix);
+    reverse(infix, rev);
+    for (int i = 0; i < strlen(rev); i++)
     {
-        if (exper[i] == ')')
-            ecopy[c++] = '(';
-        else if (exper[i] == '(')
-            ecopy[c++] = ')';
-        else
-            ecopy[c++] = exper[i];
-    }
-    ecopy[c] = '\0';
-    c = 0;
-    int flag = 0;
-    for (int i = 0; i < strlen(ecopy); i++)
-    {
-        char e = ecopy[i];
-        if (e >= '0' && e <= '9')
-            exper[c++] = e;
-        else if (e == '(')
+        if (rev[i] >= '0' && rev[i] <= '9')
+            prefix[c++] = rev[i];
+        else if (rev[i] == '(')
+            push(rev[i]);
+        else if (rev[i] == ')')
         {
-            flag = 1;
-            push(e);
-        }
-        else if (e == ')')
-        {
-            flag = 0;
             while (top != -1 && stack[top] != '(')
             {
-                exper[c++] = pop();
+                prefix[c++] = pop();
             }
             pop();
         }
-        else if (e == '+' || e == '-' || e == '*' || e == '/')
+        else
         {
-            while (top != 1 && precedence(stack[top]) > precedence(e))
+            while (top != -1 && precedence(stack[top]) >= precedence(rev[i]))
             {
-                exper[c++] = pop();
+                prefix[c++] = pop();
             }
-            push(e);
+            push(rev[i]);
         }
     }
     while (top != -1)
     {
-        exper[c++] = pop();
+        prefix[c++] = pop();
     }
-    exper[c++] = '\0';
-    for (int i = c - 2; i >= 0; i--)
-    {
-        printf("%c", exper[i]);
-    }
+
+    reverse(prefix, rev);
+
+    rev[c] = '\0';
+
+    printf("%s", rev);
 }
