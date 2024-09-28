@@ -1,6 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+When to Use Single vs Double Asterisk
+
+Single Asterisk (`*`): Use this when you need a pointer to a variable. This is commonly used for accessing and manipulating values via pointers.
+
+Double Asterisk (`**`): Use this when you need a pointer to a pointer. This is useful when you need to modify the original pointer in a function
+(e.g., in linked list operations where the head pointer might need to change).
+*/
+
 struct Node
 {
     int data;
@@ -31,7 +40,6 @@ void appendatEnd(struct Node **headref, int data)
         return;
     }
     struct Node *temp = *headref;
-    // Correct the condition here
     while (temp->nextNode != NULL)
     {
         temp = temp->nextNode;
