@@ -98,6 +98,58 @@ struct Node *find_max(struct Node *T)
     }
 }
 
+// Find nth maximum element using reverse inorder traversal
+struct Node *n_find_max(int k, struct Node *T, int *count)
+{
+    if (T == NULL)
+    {
+        return NULL;
+    }
+
+    // First, go to the right subtree (largest elements)
+    struct Node *right = n_find_max(k, T->right, count);
+    if (right != NULL)
+    {
+        return right; // If found in right subtree, return it
+    }
+
+    // Visit the current node
+    (*count)++;
+    if (*count == k)
+    {
+        return T; // This is the nth largest element
+    }
+
+    // Now, go to the left subtree
+    return n_find_max(k, T->left, count);
+}
+
+// Find nth minimum (smallest) element using inorder traversal
+struct Node *n_find_min(int k, struct Node *T, int *count)
+{
+    if (T == NULL)
+    {
+        return NULL;
+    }
+
+    // First, go to the left subtree (smallest elements)
+    struct Node *left = n_find_min(k, T->left, count);
+    if (left != NULL)
+    {
+        return left; // If found in left subtree, return it
+    }
+
+    // Visit the current node
+    (*count)++;
+    if (*count == k)
+    {
+        return T; // This is the nth smallest element
+    }
+
+    // Now, go to the right subtree
+    return n_find_min(k, T->right, count);
+}
+
 struct Node *delete(int data, struct Node *T)
 {
     struct Node *temp;
@@ -155,7 +207,7 @@ int main()
 {
     struct Node *root = NULL;
 
-    // Example operations
+    // Inserting nodes into the BST
     root = insert(50, root);
     root = insert(30, root);
     root = insert(20, root);
@@ -164,10 +216,12 @@ int main()
     root = insert(60, root);
     root = insert(80, root);
 
+    // Inorder traversal of the BST
     printf("Inorder traversal of the binary search tree:\n");
     inorder(root);
     printf("\n");
 
+    // Deleting some nodes
     root = delete (20, root);
     printf("Inorder traversal after deleting 20:\n");
     inorder(root);
@@ -182,6 +236,33 @@ int main()
     printf("Inorder traversal after deleting 50:\n");
     inorder(root);
     printf("\n");
+
+    // Finding the nth maximum and minimum elements
+    int count = 0;
+    int k = 3; // Example: find 3rd largest and 3rd smallest
+    struct Node *nth_largest = n_find_max(k, root, &count);
+    if (nth_largest != NULL)
+    {
+        printf("The %dth largest element is: %d\n", k, nth_largest->data);
+    }
+    else
+    {
+        printf("Less than %d elements in the tree for kth largest.\n", k);
+    }
+
+    count = 0; // Reset count for the next search
+    struct Node *nth_smallest = n_find_min(k, root, &count);
+    if (nth_smallest != NULL)
+    {
+        printf("The %dth smallest element is: %d\n", k, nth_smallest->data);
+    }
+    else
+    {
+        printf("Less than %d elements in the tree for kth smallest.\n", k);
+    }
+
+    // Freeing allocated memory (optional)
+    // You may implement a function to delete the entire tree if needed
 
     return 0;
 }
