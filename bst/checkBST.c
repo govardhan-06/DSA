@@ -53,7 +53,7 @@ int checkBST(struct Node *root, int min, int max)
 
 int isBST(struct Node *root)
 {
-    return isBSTUtil(root, INT_MIN, INT_MAX);
+    return checkBST(root, INT_MIN, INT_MAX);
 }
 
 int main()
