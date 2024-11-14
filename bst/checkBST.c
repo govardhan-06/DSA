@@ -1,62 +1,81 @@
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 
-struct Node
+/* A binary tree node has data, pointer to left child
+   and a pointer to the right child */
+struct node
 {
     int data;
-    struct Node *left;
-    struct Node *right;
+    struct node *left;
+    struct node *right;
 };
 
-// Function to create a new node
-struct Node *createNode(int data)
+int isBSTUtil(struct node *node, int min, int max);
+
+/* Returns true if the given tree is a binary search tree
+   (efficient version). */
+int isBST(struct node *node)
 {
-    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
-    newNode->data = data;
-    newNode->left = NULL;
-    newNode->right = NULL;
-    return newNode;
+    return (isBSTUtil(node, INT_MIN, INT_MAX));
 }
 
-// Function to insert a new node in the BST
-struct Node *insert(struct Node *root)
+/* Returns true if the given tree is a BST and its
+   values are >= min and <= max. */
+int isBSTUtil(struct node *node, int min, int max)
 {
-    int leftdata, rightdata;
-    if (root == NULL)
-        return NULL;
-    scanf("%d", &leftdata);
-    if (leftdata != -1)
-    {
-        root->left = createNode(leftdata);
-        insert(root->left);
-    }
-    scanf("%d", &rightdata);
-    if (rightdata != -1)
-    {
-        root->right = createNode(rightdata);
-        insert(root->right);
-    }
-    return root;
-}
-
-int checkBST(struct Node *root, int min, int max)
-{
-    if (root == NULL)
+    /* An empty tree is BST */
+    if (node == NULL)
         return 1;
-    if (root->data < min || root->data > max)
-    {
+
+    /* False if this node violates the min/max constraint */
+    if (node->data < min || node->data > max)
         return 0;
-    }
-    return checkBST(root->left, min, root->data) && checkBST(root->right, root->data, max);
+
+    /* Otherwise, check the subtrees recursively,
+       tightening the min or max constraint */
+    return isBSTUtil(node->left, min, node->data - 1) &&
+           isBSTUtil(node->right, node->data + 1, max);
 }
 
-int isBST(struct Node *root)
+/* Helper function that allocates a new node with the
+   given data and NULL left and right pointers. */
+struct node *newNode(int data)
 {
-    return checkBST(root, INT_MIN, INT_MAX);
+    struct node *node = (struct node *)malloc(sizeof(struct node));
+    node->data = data;
+    node->left = NULL;
+    node->right = NULL;
+
+    return (node);
+}
+
+/* Function to build a binary tree from user input */
+struct node *buildTree()
+{
+    int data;
+    struct node *root = NULL;
+
+    scanf("%d", &data);
+
+    if (data == -1)
+        return NULL;
+
+    root = newNode(data);
+    root->left = buildTree();
+    root->right = buildTree();
+
+    return root;
 }
 
 int main()
 {
-    struct Node *root = NULL;
+    struct node *root = buildTree();
+
+    if (isBST(root))
+        printf("The given binary tree is a BST\n");
+    else
+        printf("The given binary tree is not a BST\n");
+
+    return 0;
 }
