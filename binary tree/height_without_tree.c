@@ -1,5 +1,4 @@
 #include <stdio.h>
-
 #define MAX_NODES 10
 
 int findHeight(int parent[], int n)

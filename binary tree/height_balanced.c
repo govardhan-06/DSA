@@ -53,14 +53,14 @@ bool isBalanced(struct Node *root)
 {
     if (root == NULL)
         return true;
-    if (!isBalanced(root->left) || !isBalanced(root->right))
-        return false;
+
     int leftTree = height(root->left);
     int rightTree = height(root->right);
+
     if (abs(leftTree - rightTree) > 1)
         return false;
-    else
-        return true;
+
+    return isBalanced(root->left) && isBalanced(root->right);
 }
 
 int main()
