@@ -21,3 +21,8 @@
 
    (n / 1)*((n-1) / 2)*.....*((n-r+1) / r).
    ```
+
+2. Variation 2: Printing out the row
+3. Variation 3: Printing out the entire triangle
+
+The best way is to use the equation given in the page instead of the approach of individually generating elements using nCr equation.

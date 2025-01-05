@@ -1,5 +1,8 @@
-#include <iostream.h>
-#include <vector.h>
+#include <iostream>
+using namespace std;
+#include <vector>
+
+// set zero in matrix
 class Solution
 {
 public:
