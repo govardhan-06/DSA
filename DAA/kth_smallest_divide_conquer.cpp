@@ -32,17 +32,19 @@ public:
     // Recursive function to find the kth smallest element
     int kth_small(vector<int> &arr, int low, int high, int k)
     {
-        if (low <= high)
-        {
-            int pindex = partition(arr, low, high);
-            if (pindex == k)
-                return arr[pindex];
-            else if (pindex < k)
-                return kth_small(arr, pindex + 1, high, k);
-            else
-                return kth_small(arr, low, pindex - 1, k);
-        }
-        return -1; // Return -1 if the element is not found
+        if (low == high)
+            return arr[low];
+
+        int pivot = partition(arr, low, high);
+
+        if (pivot == k - 1)
+            return arr[pivot];
+
+        else if (pivot > k - 1)
+            return kth_small(arr, low, pivot - 1, k);
+
+        else
+            return kth_small(arr, pivot + 1, high, k);
     }
 };
 
@@ -50,7 +52,7 @@ int main()
 {
     Solution s;
     vector<int> arr = {7, 2, 14, 10, 1, 80};
-    int k = 5; // kth smallest element (k-1 for 0-based index)
-    cout << "Required element: " << s.kth_small(arr, 0, arr.size() - 1, k - 1) << endl;
+    int k = 5; // kth smallest element
+    cout << "Required element: " << s.kth_small(arr, 0, arr.size() - 1, k) << endl;
     return 0;
 }
