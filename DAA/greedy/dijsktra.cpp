@@ -29,12 +29,16 @@ vector<int> dijkstra(int V, vector<vector<int>> adj[], int src)
 
     while (!pq.empty())
     {
+        // Get the node with the shortest distance
+        // from the priority queue
         int dis = pq.top().first;
         int node = pq.top().second;
         pq.pop();
 
         for (auto it : adj[node])
         {
+            // Get the adjacent node and the edge weight
+            // of the current node
             int adjNode = it[0];
             int edgeWeight = it[1];
 
