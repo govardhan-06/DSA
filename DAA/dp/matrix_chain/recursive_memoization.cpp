@@ -28,9 +28,9 @@ int LookupChain(vector<vector<int>> &m, vector<int> &p, int i, int j)
 
 int MatrixChainMultiplication(vector<int> &p)
 {
-    int n = p.size();
+    int n = p.size() - 1;
     vector<vector<int>> m(n, vector<int>(n, -1));
-    return LookupChain(m, p, 1, n - 1);
+    return LookupChain(m, p, 1, n);
 }
 
 int main()

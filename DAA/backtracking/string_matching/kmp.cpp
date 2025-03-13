@@ -25,6 +25,10 @@ vector<int> computePrefixFunction(const string &P)
         lps[q] = k; // Store the prefix function value
     }
 
+    // NOTE
+    // Last element of lps array(lps[n-1]) will store the length of
+    // longest prefix that is also suffix of entire string
+
     return lps;
 }
 
