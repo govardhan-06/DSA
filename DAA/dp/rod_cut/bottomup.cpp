@@ -3,6 +3,11 @@
 #include <climits>
 using namespace std;
 
+// Rows (ind) → Represent how many different rod lengths we are considering.
+// Columns (N) → Represent the total rod length we can cut.
+// Each dp[ind][N] stores the max profit for rod length N using first ind + 1 lengths.
+// The final answer is stored in dp[n-1][n], which gives the max profit for a full rod of length n.
+
 // Function to calculate the maximum profit for rod cutting
 int cutRod(vector<int> &price, int n)
 {
