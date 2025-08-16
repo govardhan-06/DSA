@@ -5,9 +5,9 @@ class BinaryPalindrome{
         int reversed=0;
         int orginal=n;
         while(orginal>0){
-            reversed<<=1;  // Left shift by 1 bit
-            reversed |= (orginal&1);  // Add the least significant bit of 'x' to'reversed'
-            orginal>>=1;  // Right shift by 1 bit
+            reversed<<=1;  // Left shift by 1 bit (to make space for the new digit from orginal)
+            reversed |= (orginal&1);  // Append the least significant bit of 'x' to'reversed'
+            orginal>>=1;  // Right shift by 1 bit to remove the digit which has already been appended to the reversed
         }
         return reversed==n;
     }

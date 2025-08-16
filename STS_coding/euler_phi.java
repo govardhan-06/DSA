@@ -1,20 +1,17 @@
-import java.util.Scanner;
+import java.util.*;
 
-class EulerPhiAlgo{
-    public static int eulerphi(int n){
+class EulerPhi{
+    public static int euler(int n){
         int result=n;
-
-        for(int p=2;p*p<n;p++){
-            // To get the prime factors of n
-            if(n%p==0){
-                // To remove the multiples of p
-                while(n%p==0){
-                    n/=p;
+        //get the prime factors
+        for(int i=2;i*i<=n;i++){
+            if(n%i==0){
+                while(n%i==0){
+                    n/=i;
                 }
-                result-=result/p;
+                result-=result/i;
             }
         }
-        // To remove the influence of prime factors greater than sqrt(n)
         if(n>1){
             result-=result/n;
         }
@@ -22,10 +19,7 @@ class EulerPhiAlgo{
     }
     public static void main(String[] args){
         Scanner sc=new Scanner(System.in);
-        System.out.println("Enter the number: ");
         int n=sc.nextInt();
-        System.out.println("The entered number: "+n);
-        int phiNum=eulerphi(n);
-        System.out.println("Result: "+phiNum);
+        System.out.println(euler(n));
     }
 }

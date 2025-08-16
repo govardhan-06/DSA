@@ -12,30 +12,28 @@
 // 4. Both of these algorithms are efficient for finding prime numbers in certain ranges. The Segmented Sieve is particularly useful for 
 // finding primes in large ranges, while the Incremental Sieve is useful for finding primes starting from a given number.
 
-import java.utils.*;
+import java.util.*;
 
-class SegmentedSieve{
-    public static void segsieve(int l,int h){
-        boolean[] prime=new boolean[h+1];
-        for(int i=2;i<h;i++){
-            prime[i]=true;
-        }
-        for(int p=2;p*p<h;p++){
-            int sm=(l/h)*p; // smallest multiple of p between l and h
-            if(sm<l){
-                sm+=p;
-            }
-            for(int i=sm;i<h;i+=p){
-                prime[i]=false;
+class SegmentedSieve {
+    public static void segsieve(int l, int h) {
+        boolean[] prime = new boolean[h - l + 1];
+        Arrays.fill(prime, true);
+
+        for (int p = 2; p * p <= h; p++) {
+            int sm = Math.max(p * p, ((l + p - 1) / p) * p); // smallest multiple ≥ l
+            for (int i = sm; i <= h; i += p) {
+                prime[i - l] = false;
             }
         }
-        for(int i=l;i<h;i++){
-            if(prime[i]==true){
-                System.out.print(i+" ");
+
+        for (int i = l; i <= h; i++) {
+            if (i > 1 && prime[i - l]) {
+                System.out.print(i + " ");
             }
         }
     }
-    public static void main(String[] args){
-        segsieve(10,50);
+
+    public static void main(String[] args) {
+        segsieve(10, 50);
     }
 }
