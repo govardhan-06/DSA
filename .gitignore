@@ -1,3 +1,6 @@
 .exe
 .vscode/
 practice/
+STS_coding/cat1/*.class
+STS_coding/practice/
+STS_coding/cat2/*.class
