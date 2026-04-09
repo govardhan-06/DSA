@@ -17,9 +17,7 @@ public class DESServer {
 
         System.out.println("\nReceived Cipher: " + ct);
 
-        SDES.generateKeys(key);
-
-        String pt = SDES.processDES(ct, SDES.K2, SDES.K1);
+        String pt = DESUtil.decrypt(ct, key);
 
         System.out.println("Decrypted: " + pt);
 

@@ -61,7 +61,7 @@ public class AliceClient {
         System.out.println("\n[4] Original Message: " + message);
         
         System.out.println("[5] Encrypting message using XOR cipher with Shared Key (" + sharedKey + ")...");
-        String encryptedMsg = encry-pt(message, sharedKey);
+        String encryptedMsg = encrypt(message, sharedKey);
         System.out.println("    Sending Encrypted Message: [" + encryptedMsg + "]");
         out.println(encryptedMsg);
 

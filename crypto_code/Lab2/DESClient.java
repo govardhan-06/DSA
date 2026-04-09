@@ -9,15 +9,13 @@ public class DESClient {
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Enter 10-bit key: ");
+        System.out.print("Enter 64-bit binary key: ");
         String key = sc.nextLine();
 
-        System.out.print("Enter 8-bit plaintext: ");
+        System.out.print("Enter 64-bit binary plaintext: ");
         String pt = sc.nextLine();
 
-        SDES.generateKeys(key);
-
-        String ct = SDES.processDES(pt, SDES.K1, SDES.K2);
+        String ct = DESUtil.encrypt(pt, key);
 
         System.out.println("\nCiphertext: " + ct);
 
