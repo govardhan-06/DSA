@@ -29,14 +29,12 @@ public class DSSClient {
         return hex.toString();
     }
  
-    static BigInteger randomBetween(BigInteger min, BigInteger max) { 
-        BigInteger range = max.subtract(min); 
-        BigInteger result; 
-        do { 
-            result = new BigInteger(range.bitLength(), rand); 
-        } while (result.compareTo(range) > 0); 
-        return result.add(min); 
-    } 
+    static BigInteger randomBetween(BigInteger min, BigInteger max) {
+        BigInteger range = max.subtract(min).add(BigInteger.ONE);
+        return new BigInteger(range.bitLength(), rand)
+                .mod(range)
+                .add(min);
+    }
  
     public static void main(String[] args) throws Exception { 
         // Digital Signature Scheme (DSS) - Signature Generation Process

@@ -70,90 +70,127 @@ public class ClassicalCiphers {
     }
 
     // ==========================================
-    // 3. PLAYFAIR CIPHER (UPDATED & VIVA-SAFE)
+    // 3. PLAYFAIR CIPHER
     // ==========================================
-    public static char[][] generatePlayfairMatrix(String key) {
-        char[][] matrix = new char[5][5];
-        boolean[] seen = new boolean[26];
-        seen['J' - 'A'] = true; // Treat J as I
-        
-        StringBuilder keyStr = new StringBuilder(key.toUpperCase().replaceAll("[^A-Z]", "").replace("J", "I"));
-        for (char c = 'A'; c <= 'Z'; c++) {
-            if (c != 'J') keyStr.append(c);
+    public static char[][] generate Matrix(String key) {
+                                                                                                                 char[][] matrix = new char[5][5];
+        boolean[] used = new boolean[26];
+
+        key = key.toUpperCase().replaceAll("[^A-Z]", "").replace('J', 'I');
+
+        StringBuilder sb = new StringBuilder();
+
+        // Add key characters without duplicates.
+        for (char c : key.toCharArray()) {
+            if (!used[c - 'A']) {
+                used[c - 'A'] = true;
+                sb.append(c);
+            }
         }
 
-        System.out.println("--- Playfair 5x5 Key Matrix ---");
-        int index = 0;
-        for (int r = 0; r < 5; r++) {
-            for (int c = 0; c < 5; c++) {
-                while (seen[keyStr.charAt(index) - 'A']) {
-                    index++;
-                }
-                matrix[r][c] = keyStr.charAt(index);
-                seen[matrix[r][c] - 'A'] = true;
-                System.out.print(matrix[r][c] + " ");
+        // Add remaining letters except J.
+        for (char c = 'A'; c <= 'Z'; c++) {
+            if (c != 'J' && !used[c - 'A']) {
+                sb.append(c);
             }
-            System.out.println();
         }
+
+        int index = 0;
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                matrix[i][j] = sb.charAt(index++);
+            }
+        }
+
         return matrix;
     }
 
-    private static int[] findPosition(char[][] matrix, char target) {
-        for (int r = 0; r < 5; r++) {
-            for (int c = 0; c < 5; c++) {
-                if (matrix[r][c] == target) return new int[]{r, c};
+    private static int[] findPosition(char[][] matrix, char ch) {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (matrix[i][j] == ch) {
+                    return new int[]{i, j};
+                }
             }
         }
         return null;
     }
 
-    public static String playfairProcess(String text, String key, boolean encrypt) {
-        char[][] matrix = generatePlayfairMatrix(key);
-        text = text.toUpperCase().replaceAll("[^A-Z]", "").replace("J", "I");
-        
-        // Format digraphs
-        StringBuilder formattedText = new StringBuilder();
+    private static String prepareText(String text) {
+        text = text.toUpperCase().replaceAll("[^A-Z]", "").replace('J', 'I');
+        StringBuilder sb = new StringBuilder();
+
         for (int i = 0; i < text.length(); i++) {
-            formattedText.append(text.charAt(i));
-            if (i + 1 < text.length() && text.charAt(i) == text.charAt(i + 1)) {
-                formattedText.append('X'); // Insert X between double letters
+            char a = text.charAt(i);
+            char b = (i + 1 < text.length()) ? text.charAt(i + 1) : 'X';
+
+            if (a == b) {
+                sb.append(a).append('X');
+            } else {
+                sb.append(a).append(b);
+                i++; // Move to next pair.
             }
         }
-        if (formattedText.length() % 2 != 0) formattedText.append('X');
 
-        System.out.println("\nFormatted Digraphs: " + formattedText);
-        System.out.println("--- Playfair Substitution Steps ---");
-
-        StringBuilder result = new StringBuilder();
-        
-        // --- APPLIED CLEAR LOGIC FIX HERE ---
-        int shift;
-        if (encrypt) {
-            shift = 1;
-        } else {
-            shift = -1;
+        if (sb.length() % 2 != 0) {
+            sb.append('X');
         }
 
-        for (int i = 0; i < formattedText.length(); i += 2) {
-            char a = formattedText.charAt(i);
-            char b = formattedText.charAt(i + 1);
+        return sb.toString();
+    }
+
+    public static String process(String text, String key, boolean encrypt) {
+        char[][] matrix = generateMatrix(key);
+        String prepared = prepareText(text);
+        StringBuilder result = new StringBuilder();
+
+        int shift = encrypt ? 1 : -1;
+
+        for (int i = 0; i < prepared.length(); i += 2) {
+            char a = prepared.charAt(i);
+            char b = prepared.charAt(i + 1);
+
             int[] posA = findPosition(matrix, a);
             int[] posB = findPosition(matrix, b);
 
-            char newA, newB;
-            if (posA[0] == posB[0]) { // Same Row
-                newA = matrix[posA[0]][(posA[1] + shift + 5) % 5];
-                newB = matrix[posB[0]][(posB[1] + shift + 5) % 5];
-            } else if (posA[1] == posB[1]) { // Same Column
-                newA = matrix[(posA[0] + shift + 5) % 5][posA[1]];
-                newB = matrix[(posB[0] + shift + 5) % 5][posB[1]];
-            } else { // Rectangle swap
-                newA = matrix[posA[0]][posB[1]];
-                newB = matrix[posB[0]][posA[1]];
+            if (posA[0] == posB[0]) {
+                result.append(matrix[posA[0]][  
+                result.append(matrix[posB[0]][(posB[1] + shift + 5) % 5]);
+            } else if (posA[1] == posB[1]) {
+                result.append(matrix[(posA[0] + shift + 5) % 5][posA[1]]);
+                result.append(matrix[(posB[0] + shift + 5) % 5][posB[1]]);
+            } else {
+                result.append(matrix[posA[0]][posB[1]]);
+                result.append(matrix[posB[0]][posA[1]]);
             }
-            System.out.println("Pair (" + a + b + ") -> (" + newA + newB + ")");
-            result.append(newA).append(newB);
         }
+
         return result.toString();
+    }
+
+    public static String encrypt(String plaintext, String key) {
+        return process(plaintext, key, true);
+    }
+
+    public static String decrypt(String ciphertext, String key) {
+        return process(ciphertext, key, false);
+    }
+
+    public static void printMatrix(char[][] matrix) {
+        for (char[] row : matrix) {
+            for (char c : row) {
+                System.out.print(c + " ");
+            } 
+            System.out.println();
+        }
+    }
+
+    // Backward-compatible wrappers for existing callers.
+    public static char[][] generatePlayfairMatrix(String key) {
+        return generateMatrix(key);
+    }
+
+    public static String playfairProcess(String text, String key, boolean encrypt) {
+        return process(text, key, encrypt);
     }
 }

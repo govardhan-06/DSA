@@ -66,7 +66,7 @@ public class DSSServer {
         BigInteger u2 = (r.multiply(w)).mod(q); 
         System.out.println("Step 4: Computed u1 = (H * w) mod q = " + u1); 
         System.out.println("Step 5: Computed u2 = (r * w) mod q = " + u2); 
- 
+        
         // Phase 3: Compute verification value v and compare
         System.out.println("\nPhase 3: Verify Signature");
         BigInteger v = ((g.modPow(u1, p).multiply(y.modPow(u2, p))).mod(p)).mod(q); 

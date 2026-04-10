@@ -29,7 +29,7 @@ public class AliceClient {
         // Get parameters from user
         System.out.print("Enter prime number (p): ");
         long p = sc.nextLong();
-        System.out.print("Enter generator (g): ");
+        System.out.print("Enter generator (g): ");                                                                                                            
         long g = sc.nextLong();
         System.out.print("Enter Alice's private key (a): ");
         long a = sc.nextLong();

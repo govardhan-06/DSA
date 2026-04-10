@@ -39,33 +39,33 @@ public class SHAServer {
             System.out.println("Received SHA-512 Hash: " + receivedHash); 
             
             // SHA-512 Preprocessing
-            System.out.println("\n=== SHA-512 PREPROCESSING ===");
-            byte[] messageBytes = message.getBytes();
-            long messageLength = messageBytes.length * 8;
-            StringBuilder binary = new StringBuilder();
+            // System.out.println("\n=== SHA-512 PREPROCESSING ===");
+            // byte[] messageBytes = message.getBytes();
+            // long messageLength = messageBytes.length * 8;
+            // StringBuilder binary = new StringBuilder();
             
-            // Convert message to binary
-            for (byte b : messageBytes) {
-                binary.append(String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0'));
-            }
+            // // Convert message to binary
+            // for (byte b : messageBytes) {
+            //     binary.append(String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0'));
+            // }
             
-            // Append '1' bit and pad
-            binary.append("1");
-            while ((binary.length() % 1024) != 896) {
-                binary.append("0");
-            }
+            // // Append '1' bit and pad
+            // binary.append("1");
+            // while ((binary.length() % 1024) != 896) {
+            //     binary.append("0");
+            // }
             
-            // Append 128-bit message length
-            String lengthBinary = String.format("%128s", Long.toBinaryString(messageLength)).replace(' ', '0');
-            binary.append(lengthBinary);
+            // // Append 128-bit message length
+            // String lengthBinary = String.format("%128s", Long.toBinaryString(messageLength)).replace(' ', '0');
+            // binary.append(lengthBinary);
             
-            // Extract first 16 words (64 bits each)
-            String block = binary.substring(0, 1024);
-            System.out.println("Step 1: Message Schedule Words (W0-W15):");
-            for (int i = 0; i < 16; i++) {
-                String word = block.substring(i * 64, (i + 1) * 64);
-                System.out.println("  W" + i + " = " + word);
-            }
+            // // Extract first 16 words (64 bits each)
+            // String block = binary.substring(0, 1024);
+            // System.out.println("Step 1: Message Schedule Words (W0-W15):");
+            // for (int i = 0; i < 16; i++) {
+            //     String word = block.substring(i * 64, (i + 1) * 64);
+            //     System.out.println("  W" + i + " = " + word);
+            // }
             
             System.out.println("\nStep 2: Received message bytes (hex) = " + toHex(message.getBytes())); 
             System.out.println("Step 3: Recomputing SHA-512 digest on server..."); 
@@ -86,5 +86,15 @@ public class SHAServer {
         } catch (Exception e) { 
             e.printStackTrace(); 
         } 
+    }
+
+    public static String calculateHash(String message) throws Exception{
+        MessageDigest md=new MessageDigest.getInstance("SHA-512");
+        byte[] digest=md.digest(message.getBytes());
+        StringBuilder sb=new StringBuilder();
+        for(byte b:digest){
+            sb.append(String.format("%02x",b));
+        }
+        return sb.toString();
     } 
 }
